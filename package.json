@@ -1,0 +1,30 @@
+{
+  "name": "wallet-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avalon-artisans/wallet-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avalon-artisans/wallet-backend/issues"
+  },
+  "homepage": "https://github.com/avalon-artisans/wallet-backend#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "eslint": "^8.41.0",
+    "eslint-plugin-typescript": "^0.14.0",
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}

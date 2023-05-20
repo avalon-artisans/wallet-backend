@@ -1,0 +1,17 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore .env file
+.env
+
+# Ignore build artifacts or compiled files
+dist/
+build/
+*.exe
+
+# Ignore specific files or directories using their relative paths
+# path/to/file.txt
+# path/to/directory/
