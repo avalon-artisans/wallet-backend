@@ -6,6 +6,7 @@ node_modules/
 
 # Ignore .env file
 .env
+.idea
 
 # Ignore build artifacts or compiled files
 dist/
