@@ -1,8 +1,14 @@
 import express from 'express';
-const app = express();
+import userRoute from './routes/UserRoute';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 
-// Import the routes
-const userRoute = require('./routes/UserRoute');
+const app = express();
+dotenv.config();
+
+app.use(bodyParser.urlencoded({
+    extended : true
+}));
 
 // Middleware
 app.use(express.json());
