@@ -12,7 +12,7 @@ export class UserController {
         this.userService = new UserService(new UserRepositoryMongo());
     }
 
-    registerUser (request: Request, response: Response) {
+    async registerUser (request: Request, response: Response): Promise<any> {
         try {
             const validatedRequest = UserRequest.validateRegisterRequest({
                 name     : request.body.name ?? '',
@@ -20,7 +20,7 @@ export class UserController {
                 password : request.body.password ?? ''
             }) as UserInterface;
 
-            const result = this.userService.registerUser(validatedRequest);
+            const result = await this.userService.registerUser(validatedRequest);
             response.status(201).json(result);
         } catch (error) {
             response.status(400).json({

@@ -1,5 +1,7 @@
 import {UserInterface} from '../../../common/interfaces/UserInterface';
 import {UserRepository} from '../repositories/UserRepository';
+import bcrypt from 'bcrypt';
+import env from '../../../infrastructure/config/environment';
 
 export class UserService {
 
@@ -9,7 +11,12 @@ export class UserService {
         this.userRepo = userRepo;
     }
 
-    registerUser (user: UserInterface) {
-        return {};
+    async registerUser (user: UserInterface) {
+        user.password = await bcrypt.hash(user.password, env.salt_rounds);
+
+        const result = await this.userRepo.createUser(user);
+        return {
+            data: result
+        };
     }
 }

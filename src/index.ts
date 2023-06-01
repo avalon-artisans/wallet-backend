@@ -2,6 +2,7 @@ import express from 'express';
 import userRoute from './routes/UserRoute';
 import bodyParser from 'body-parser';
 import env from './infrastructure/config/environment';
+import {MongooseConnect} from './infrastructure/MongooseConnect';
 
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: env.sentry_dsn });
@@ -17,6 +18,9 @@ app.use(express.json());
 
 // Use the routes
 app.use('/api/user', userRoute);
+
+// Connect to mongoDB
+new MongooseConnect();
 
 // Start the server
 app.listen(env.port, () => {
