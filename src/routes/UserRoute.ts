@@ -5,8 +5,6 @@ const router = express.Router();
 const userController = new UserController();
 
 // Define routes
-router.post('', (request, response) => {
-    userController.registerUser(request, response);
-});
+router.post('', userController.registerUser);
 
 export default router;
