@@ -14,12 +14,7 @@ export class UserController {
 
     registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
         try {
-            const validatedRequest = UserRequest.validateRegisterRequest({
-                name     : request.body.name ?? '',
-                email    : request.body.email ?? '',
-                password : request.body.password ?? ''
-            }) as UserInterface;
-
+            const validatedRequest = UserRequest.validateRegisterRequest(request.body) as UserInterface;
             const result = await this.userService.registerUser(validatedRequest);
             response.status(201).json(result);
         } catch (error) {
@@ -29,6 +24,22 @@ export class UserController {
                     title: 'Registration failed',
                     detail: exception.message
                 },
+            });
+            next(error);
+        }
+    }
+
+    authUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+        try {
+            const validatedCredReq = UserRequest.validateCredRequest(request.body);
+            response.status(200).json(['sample login']);
+        } catch (error) {
+            const exception = error as CustomError;
+            response.status(exception.statusCode ?? 500).json({
+                errors: {
+                    title: 'Login Failed',
+                    detail: exception.message
+                }
             });
             next(error);
         }
