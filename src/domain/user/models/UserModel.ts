@@ -17,6 +17,7 @@ export class UserModel {
             updated_at : { type: Date },
             deleted_at : { type: Date }
         });
+        // noinspection TypeScriptValidateTypes
         this.model = mongoose.model<UserInterface>('user', userSchema);
     }
 
@@ -34,5 +35,9 @@ export class UserModel {
             name    : result.name,
             email   : result.email
         };
+    }
+
+    public async findByEmail(email: string): Promise<any> {
+        return this.model.findOne({ email : email }).exec();
     }
 }

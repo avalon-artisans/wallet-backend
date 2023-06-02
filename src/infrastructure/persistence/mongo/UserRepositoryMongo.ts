@@ -12,4 +12,8 @@ export class UserRepositoryMongo implements UserRepository {
     async createUser(user: UserInterface): Promise<any> {
         return this.userModel.create(user);
     }
+
+    async findByEmail(email: string): Promise<any> {
+        return await this.userModel.findByEmail(email);
+    }
 }

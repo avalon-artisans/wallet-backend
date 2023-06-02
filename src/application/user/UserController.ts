@@ -3,6 +3,7 @@ import {UserService} from '../../domain/user/services/UserService';
 import {UserRepositoryMongo} from '../../infrastructure/persistence/mongo/UserRepositoryMongo';
 import {UserRequest} from './UserRequest';
 import {UserInterface} from '../../common/interfaces/UserInterface';
+import {CustomError} from '../../common/utilities/CustomError';
 
 export class UserController {
     private userService: UserService;
@@ -22,10 +23,11 @@ export class UserController {
             const result = await this.userService.registerUser(validatedRequest);
             response.status(201).json(result);
         } catch (error) {
-            response.status(400).json({
+            const exception = error as CustomError;
+            response.status(exception.statusCode ?? 500).json({
                 errors: {
                     title: 'Registration failed',
-                    detail: (error as Error).message
+                    detail: exception.message
                 },
             });
             next(error);
