@@ -25,7 +25,11 @@ export class UserService {
     private async checkIfEmailExist(email: string): Promise<any> {
         const result = await this.userRepo.findByEmail(email);
         if (!!result) {
-            throw new CustomError('Email already exist', 409);
+            throw new CustomError(
+                'Email already exist',
+                409,
+                JSON.stringify({context: 'email'})
+            );
         }
     }
 

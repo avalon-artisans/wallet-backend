@@ -1,25 +1,36 @@
-import validator from 'validator';
-import isLength = validator.isLength;
-import isEmail = validator.isEmail;
-import {Rules} from '../../common/utilities/Rules';
+import Joi, {ValidationResult} from "joi";
+import {CustomError} from "../../common/utilities/CustomError";
 
 export class UserRequest {
     static validateRegisterRequest(data: object) {
-        const rules = {
-            name: {
-                validator : (value: string) => isLength(value, { min: 2, max: 100 }),
-                message   : 'Name must be between 2 and 100 characters'
-            },
-            email: {
-                validator : isEmail,
-                message   : 'Invalid email address'
-            },
-            password: {
-                validator : (value: string) => isLength(value, { min: 8 }),
-                message   : 'Password must be at least 8 characters long'
-            }
-        };
+        const schema = Joi.object({
+            name     : Joi.string().required().min(1).max(100),
+            email    : Joi.string().email().required().max(100),
+            password : Joi.alternatives().try(
+                Joi.string().min(8),
+                Joi.number().min(8)
+            ).required()
+        });
+        const result = schema.validate(data);
+        return UserRequest.checkResult(result);
+    }
 
-        return Rules.validate(data, rules);
+    static validateCredRequest(data: object) {
+        const schema = Joi.object({
+            email: Joi.string().email().required(),
+            password : Joi.required()
+        });
+        const result = schema.validate(data);
+        return UserRequest.checkResult(result);
+    }
+
+    private static checkResult(param: object) {
+        const result = param as ValidationResult;
+        if (!!result.error) {
+            const error = result.error.details[0];
+            throw new CustomError(error.message, 400, JSON.stringify(error));
+        }
+
+        return result.value;
     }
 }
