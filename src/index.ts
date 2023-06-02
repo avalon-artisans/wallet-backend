@@ -2,9 +2,10 @@ import express from 'express';
 import userRoute from './routes/UserRoute';
 import bodyParser from 'body-parser';
 import env from './infrastructure/config/environment';
-import {MongooseConnect} from './infrastructure/MongooseConnect';
+import {Error} from './middlewares/Error';
+import {MongoDB} from './infrastructure/MongoDB';
+import * as Sentry from '@sentry/node';
 
-const Sentry = require('@sentry/node');
 Sentry.init({ dsn: env.sentry_dsn });
 
 const app = express();
@@ -13,16 +14,21 @@ app.use(bodyParser.urlencoded({
     extended : true
 }));
 
-// Middleware
 app.use(express.json());
 
-// Use the routes
+// Routes
 app.use('/api/user', userRoute);
 
-// Connect to mongoDB
-new MongooseConnect();
+// Error reporting
+app.use(Error.capture);
 
-// Start the server
-app.listen(env.port, () => {
-    console.log(`Server started on port ${env.port}`);
-});
+// Connection
+MongoDB.connect()
+    .then(() => {
+        app.listen(env.port, () => {
+            console.log(`Server started on port ${env.port}`);
+        });
+    })
+    .catch(() => {
+        process.exit(1);
+    });

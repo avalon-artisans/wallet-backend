@@ -1,7 +1,6 @@
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {UserService} from '../../domain/user/services/UserService';
 import {UserRepositoryMongo} from '../../infrastructure/persistence/mongo/UserRepositoryMongo';
-import * as Sentry from '@sentry/node';
 import {UserRequest} from './UserRequest';
 import {UserInterface} from '../../common/interfaces/UserInterface';
 
@@ -12,7 +11,7 @@ export class UserController {
         this.userService = new UserService(new UserRepositoryMongo());
     }
 
-    async registerUser (request: Request, response: Response): Promise<any> {
+    registerUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
         try {
             const validatedRequest = UserRequest.validateRegisterRequest({
                 name     : request.body.name ?? '',
@@ -29,7 +28,7 @@ export class UserController {
                     detail: (error as Error).message
                 },
             });
-            Sentry.captureException(error);
+            next(error);
         }
     }
 }
