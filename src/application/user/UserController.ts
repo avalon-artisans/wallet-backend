@@ -32,7 +32,15 @@ export class UserController {
     authUser = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
         try {
             const validatedCredReq = UserRequest.validateCredRequest(request.body);
-            response.status(200).json(['sample login']);
+            const validatedHeaderReq = UserRequest.validateHeaderRequest({
+                client_id : request.headers.client_id
+            });
+            const result = await this.userService.authUser({
+                client_id     : validatedHeaderReq.client_id,
+                email         : validatedCredReq.email,
+                password      : validatedCredReq.password
+            });
+            response.status(200).json(result);
         } catch (error) {
             const exception = error as CustomError;
             response.status(exception.statusCode ?? 500).json({

@@ -24,6 +24,15 @@ export class UserRequest {
         return UserRequest.checkResult(result);
     }
 
+    static validateHeaderRequest(data: object) {
+        const schema = Joi.object({
+            client_id : Joi.string().required()
+        });
+
+        const result = schema.validate(data);
+        return UserRequest.checkResult(result);
+    }
+
     private static checkResult(param: object) {
         const result = param as ValidationResult;
         if (!!result.error) {
