@@ -41,6 +41,8 @@ export class UserService {
 
     async authUser(params: AuthInterface) {
         const result = await this.userRepo.findByEmail(params.email);
+        const user_id = result._id.toString();
+
         if (!result) {
             throw new CustomError('Incorrect email or password', 401);
         }
@@ -52,16 +54,17 @@ export class UserService {
 
         const user_agent = Auth.verifyClient(params.client_id);
         const user_info = {
-            user_id : result.user_id,
+            user_id : user_id,
             name    : result.name,
             email   : result.email
         };
+
         if (user_agent === 'mobile') {
             return {
                 data: {
                     ...user_info,
-                    access_token: Auth.createToken(user_agent, env.access_token_expiry),
-                    refresh_token: Auth.createToken(user_agent, env.refresh_token_expiry)
+                    access_token: Auth.createToken(user_agent, user_id, env.access_token_expiry),
+                    refresh_token: Auth.createToken(user_agent, user_id, env.refresh_token_expiry)
                 }
             };
         }
@@ -69,7 +72,7 @@ export class UserService {
         return {
             data: {
                 ...user_info,
-                access_token: Auth.createToken(user_agent, env.access_token_expiry)
+                access_token: Auth.createToken(user_agent, user_id, env.access_token_expiry)
             }
         };
     }

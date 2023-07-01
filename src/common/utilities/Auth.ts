@@ -4,9 +4,10 @@ import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 export class Auth {
 
-    static createToken (user_agent: string, expiresIn: string) {
+    static createToken (user_agent: string, user_id: string, expiresIn: string) {
         const payload = {
             iat        : dayjs().unix(),
+            user_id    : user_id,
             user_agent : user_agent
         };
 
@@ -17,12 +18,7 @@ export class Auth {
         try {
             // Verify the access token
             const decoded = jwt.verify(token, env.secret_key);
-
             console.log(decoded);
-
-            // You can perform additional checks or actions based on the decoded payload
-            // For example, check if the token is expired or validate certain claims
-
         } catch (error) {
             // Access token is invalid or expired
             console.error(error);
